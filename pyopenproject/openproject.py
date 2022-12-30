@@ -35,10 +35,13 @@ from pyopenproject.model.connection import Connection
 
 class OpenProject:
 
-    def __init__(self, url, api_key, user=None):
-        self.conn = Connection(url=url, apikey=api_key) \
-            if user is None \
-            else Connection(url=url, user=user, apikey=api_key)
+    def __init__(self, url, api_key=None, user=None, client_id=None, client_secret=None):
+        if api_key:
+            self.conn = Connection(url=url, apikey=api_key) \
+                if user is None \
+                else Connection(url=url, user=user, apikey=api_key)
+        else:
+            self.conn = Connection(url=url, client_id=client_id, client_secret=client_secret)
 
     def get_activity_service(self):
         return ActivityServiceImpl(self.conn)

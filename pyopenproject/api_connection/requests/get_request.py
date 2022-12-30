@@ -10,8 +10,14 @@ class GetRequest(Request):
         super().__init__(connection, context)
 
     def _execute_request(self):
-        with requests.Session() as s:
-            s.auth = HTTPBasicAuth(self.connection.api_user, self.connection.api_key)
-            s.headers.update({"Content-Type": "application/hal+json"})
-            response = s.get(self.connection.url_base + self.context)
-        return response
+        if not self.connection.use_oauth:
+            with requests.Session() as s:
+                s.auth = HTTPBasicAuth(self.connection.api_user, self.connection.api_key)
+                s.headers.update({"Content-Type": "application/hal+json"})
+                response = s.get(self.connection.url_base + self.context)
+            return response
+        else:
+            if not hasattr(self.connection, 'oauth'):
+                self.connection.authenticate()
+            response = self.connection.oauth.get(self.connection.url_base + self.context)
+            return response
