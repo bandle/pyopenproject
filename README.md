@@ -10,7 +10,7 @@ Python library to interact with OpenProject API.
 from pyopenproject.openproject import OpenProject
 
 op = OpenProject(url="http://localhost:8080", api_key="6289058256894568479567886794")
-user = op.get_user_services().create(
+user = op.get_user_service().create(
     login="h.wurst",
     email="h.wurst@openproject.com",
     first_name="Hans",
